@@ -128,14 +128,6 @@ class CronLock {
     }
 
     /**
-     * Автоматически освобождает блокировки при уничтожении объекта
-     */
-    public function __destruct()
-    {
-        $this->releaseAll();
-    }
-
-    /**
      * Генерирует уникальный идентификатор блокировки
      */
     private function generateLockId($processName)
