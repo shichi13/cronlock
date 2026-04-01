@@ -1,0 +1,21 @@
+{
+  "name": "locker/php-cronlock",
+  "description": "Php Сервис для блокировки крон-процессов",
+  "minimum-stability": "stable",
+  "type": "library",
+  "license": "BSD-3",
+  "authors": [
+    {
+      "name": "Shichi13",
+      "email": "corpse.131@yandex.ru"
+    }
+  ],
+  "require": {
+    "php": ">=5.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "locker\\": "/"
+    }
+  }
+}
