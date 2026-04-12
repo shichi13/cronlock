@@ -87,7 +87,11 @@ class FileLockDriver
             return false;
         }
 
-        return $data['expires_at'] > time();
+        if (($data['expires_at'] != 0) && ($data['expires_at'] < time())) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -110,7 +114,7 @@ class FileLockDriver
             return null;
         }
 
-        $data['is_expired'] = $data['expires_at'] <= time();
+        $data['is_expired'] = ($data['expires_at'] == 0) ? false : ($data['expires_at'] <= time());
         $data['remaining_seconds'] = max(0, $data['expires_at'] - time());
 
         return $data;
@@ -124,18 +128,30 @@ class FileLockDriver
     {
         $count = 0;
         $files = glob($this->storagePath . '/*.lock');
-
+        $process = $this->getActiveProcess();
         foreach ($files as $file) {
             $content = file_get_contents($file);
             $data = json_decode($content, true);
-
-            if ($data && isset($data['expires_at']) && $data['expires_at'] <= time()) {
-                unlink($file);
-                $count++;
+            if ($data){
+                if (in_array($data['pid'], $process)) {
+                    continue;
+                } else {
+                    unlink($file);
+                    $count++;
+                }
             }
         }
 
         return $count;
+    }
+
+    private function getActiveProcess()
+    {
+        exec('ps -C php -o pid', $output);
+        unset($output[0]);
+        return array_map(function($row){
+            return (int)trim($row);
+        }, $output);
     }
 
     private function getLockFilePath($lockId)
