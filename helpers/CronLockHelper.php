@@ -4,7 +4,7 @@ namespace locker\helpers;
 use locker\exceptions\LockException;
 
 class CronLockHelper {
-    public static $defaultTtl = '8 minutes';
+    public static $defaultTtl = '0 seconds';
 
     public static $units = [
         'seconds' => 1,

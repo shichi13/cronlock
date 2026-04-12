@@ -133,7 +133,7 @@ class FileLockDriver
             $content = file_get_contents($file);
             $data = json_decode($content, true);
             if ($data){
-                if (in_array($data['pid'], $process)) {
+                if (in_array($data['pid'], $process) || ($data['expires_at'] > time())) {
                     continue;
                 } else {
                     unlink($file);
@@ -147,11 +147,8 @@ class FileLockDriver
 
     private function getActiveProcess()
     {
-        exec('ps -C php -o pid', $output);
-        unset($output[0]);
-        return array_map(function($row){
-            return (int)trim($row);
-        }, $output);
+        exec('pgrep php', $output);
+        return $output;
     }
 
     private function getLockFilePath($lockId)
