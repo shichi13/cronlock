@@ -41,7 +41,7 @@ class FileLockDriver
         $data = [
             'lock_id' => $lockId,
             'created_at' => time(),
-            'expires_at' => time() + $ttl,
+            'expires_at' => ($ttl != 0) ? (time() + $ttl) : 0,
             'pid' => getmypid(),
             'hostname' => gethostname(),
         ];
