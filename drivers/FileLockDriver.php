@@ -31,7 +31,7 @@ class FileLockDriver
 
             if ($data && isset($data['expires_at'])) {
                 // Если блокировка еще действует
-                if ($data['expires_at'] > time()) {
+                if ($data['expires_at'] > time() || $data['expires_at'] == 0) {
                     return false;
                 }
             }
